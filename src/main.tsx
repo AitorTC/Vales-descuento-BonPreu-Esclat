@@ -5,14 +5,19 @@ import './index.css';
 // Register Service Worker for Mobile Web Push Notifications and offline capabilities
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/sw.js', { scope: '/' })
-      .then((registration) => {
-        console.log('Service Worker registrat amb èxit:', registration.scope);
-      })
-      .catch((error) => {
-        console.warn('Error registrant el Service Worker:', error);
-      });
+    try {
+      const swUrl = new URL('sw.js', window.location.href).href;
+      navigator.serviceWorker
+        .register(swUrl)
+        .then((registration) => {
+          console.log('Service Worker registrat amb èxit:', registration.scope);
+        })
+        .catch((error) => {
+          console.warn('Avís Service Worker:', error);
+        });
+    } catch (e) {
+      console.warn('Service worker setup error:', e);
+    }
   });
 }
 
