@@ -40,11 +40,28 @@ import { ScanModal } from './components/ScanModal';
 import { CheckoutCalculator } from './components/CheckoutCalculator';
 import { HouseholdModal } from './components/HouseholdModal';
 import { NotificationModal } from './components/NotificationModal';
+import { PinLockScreen } from './components/PinLockScreen';
 
 const HOUSEHOLD_STORAGE_KEY = 'bonpreu_active_household_aitor_xenia';
 const USERNAME_STORAGE_KEY = 'bonpreu_user_name_aitor_xenia';
+const PIN_SESSION_KEY = 'bonpreu_pin_unlocked_session';
 
 export default function App() {
+  // PIN 1430 security lock
+  const [isLocked, setIsLocked] = useState<boolean>(() => {
+    return sessionStorage.getItem(PIN_SESSION_KEY) !== 'true';
+  });
+
+  const handleUnlock = () => {
+    sessionStorage.setItem(PIN_SESSION_KEY, 'true');
+    setIsLocked(false);
+  };
+
+  const handleLock = () => {
+    sessionStorage.removeItem(PIN_SESSION_KEY);
+    setIsLocked(true);
+  };
+
   // Shared Household State for Aitor and Xènia
   const [household, setHousehold] = useState<Household>(() => {
     try {
@@ -295,6 +312,10 @@ export default function App() {
       .sort((a, b) => (b.usedAt || b.createdAt).localeCompare(a.usedAt || a.createdAt));
   }, [coupons]);
 
+  if (isLocked) {
+    return <PinLockScreen onUnlock={handleUnlock} />;
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col antialiased">
       {/* Top Header with Profile Switcher, Title, and Expiry Notifications */}
@@ -306,6 +327,7 @@ export default function App() {
         alertsCount={expiryAlerts.length}
         totalSavingsEuro={stats.totalSavingsEuro}
         isOnline={isOnline}
+        onLock={handleLock}
         onToggleUser={handleToggleUser}
         onOpenNotifications={() => setIsNotificationsOpen(true)}
         onOpenHousehold={() => setIsHouseholdOpen(true)}

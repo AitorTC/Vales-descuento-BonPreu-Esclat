@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, WifiOff, Sparkles, Tag, AlertTriangle, Bell, User } from 'lucide-react';
+import { Users, WifiOff, Sparkles, Tag, AlertTriangle, Bell, User, Lock } from 'lucide-react';
 import type { Household } from '../types';
 
 interface HeaderProps {
@@ -10,6 +10,7 @@ interface HeaderProps {
   alertsCount: number;
   totalSavingsEuro: number;
   isOnline: boolean;
+  onLock: () => void;
   onToggleUser: () => void;
   onOpenNotifications: () => void;
   onOpenHousehold: () => void;
@@ -24,6 +25,7 @@ export const Header: React.FC<HeaderProps> = ({
   alertsCount,
   totalSavingsEuro,
   isOnline,
+  onLock,
   onToggleUser,
   onOpenNotifications,
   onOpenHousehold,
@@ -104,6 +106,16 @@ export const Header: React.FC<HeaderProps> = ({
               title="Codi i sincronització familiar"
             >
               <Users className="w-4 h-4 text-red-600" />
+            </button>
+
+            {/* Lock App Button */}
+            <button
+              onClick={onLock}
+              className="w-9 h-9 flex items-center justify-center rounded-full text-slate-500 hover:text-slate-800 hover:bg-slate-100 active:scale-95 transition-all"
+              aria-label="Bloquejar aplicació amb PIN"
+              title="Bloquejar app amb PIN 1430"
+            >
+              <Lock className="w-4 h-4" />
             </button>
           </div>
         </div>
